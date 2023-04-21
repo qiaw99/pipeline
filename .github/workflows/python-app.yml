@@ -32,6 +32,12 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: "3.10"
+    - name: Install poetry
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        poetry install --with lint
+        poetry run black --diff --check --config pyproject.toml ./
+        poetry run ruff  --no-fix --config pyproject.toml ./
     - name: Install dependencies
       run: |
         pip install ruff pytest
@@ -40,6 +46,7 @@ jobs:
         ruff check . --select F401 --select F403 --quiet
     - name: Test with pytest
       run: |
-        pytest test_sum.py
+        make fast-test
+        poetry run pytest -c pyproject.toml -v -m "not slow" test_sum.py
         
   
