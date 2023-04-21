@@ -32,28 +32,22 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: "3.10"
-    - name: Install poetry
-      run: |
-        make poetry-download
-        export PATH="$HOME/.poetry/env:$PATH"
+        
     - name: Install dependencies
       run: |
-        pip install ruff pytest
+        pip install ruff pytest pre-commit
+        
+    - name: precommit hook
+      run: |
+        pre-commit install
+        pre-commit run --all-files
+        
     - name: Lint with ruff
       run: |
         ruff check . --select F401 --select F403 --quiet
-    - name: Run style checks
-      run: |
-        make check-style
-    - name: Run fast tests
-      run: |
-        make fast-test
-    - name: Run safety checks
-      run: |
-        make check-safety
+    
     - name: Test with pytest
       run: |
-        make fast-test
-        poetry run pytest -c pyproject.toml -v -m "not slow" test_sum.py
+        pytest test_sum.py
         
   
