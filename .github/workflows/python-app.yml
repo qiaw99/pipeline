@@ -34,16 +34,23 @@ jobs:
         python-version: "3.10"
     - name: Install poetry
       run: |
-        curl -sSL https://install.python-poetry.org | python3 -
-        poetry install --with lint
-        poetry run black --diff --check --config pyproject.toml ./
-        poetry run ruff  --no-fix --config pyproject.toml ./
+        make poetry-download
+        export PATH="$HOME/.poetry/env:$PATH"
     - name: Install dependencies
       run: |
         pip install ruff pytest
     - name: Lint with ruff
       run: |
         ruff check . --select F401 --select F403 --quiet
+    - name: Run style checks
+      run: |
+        make check-style
+    - name: Run fast tests
+      run: |
+        make fast-test
+    - name: Run safety checks
+      run: |
+        make check-safety
     - name: Test with pytest
       run: |
         make fast-test
