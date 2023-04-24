@@ -36,6 +36,9 @@ jobs:
     - name: Install dependencies
       run: |
         pip install ruff pytest pre-commit
+        git clone git@github.com:tongshuangwu/polyjuice.git
+        cd polyjuice
+        pip install -e .
         
     - name: precommit hook
       run: |
